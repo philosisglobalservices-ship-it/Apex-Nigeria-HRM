@@ -91,6 +91,13 @@ class HRRequestHandler(http.server.SimpleHTTPRequestHandler):
             with open('app.js', 'rb') as f:
                 self.wfile.write(f.read())
             return
+        elif path == '/data_seed.js':
+            self.send_response(200)
+            self.send_header('Content-Type', 'application/javascript')
+            self.end_headers()
+            with open('data_seed.js', 'rb') as f:
+                self.wfile.write(f.read())
+            return
 
         # API Routes
         if not path.startswith('/api/'):

@@ -253,6 +253,24 @@ CREATE TABLE public.audit_events (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
+-- Step 12b: Enable Row Level Security with Full Open Access Policies for Public/Anon Role
+DO $$
+DECLARE
+    t text;
+    tables text[] := ARRAY[
+        'organizations', 'locations', 'departments', 'positions', 'employees',
+        'users', 'sessions', 'leave_types', 'leave_balances', 'leave_requests',
+        'attendance_events', 'requisitions', 'candidates', 'onboarding_tasks',
+        'goals', 'compensations', 'payroll_runs', 'hr_cases', 'documents', 'audit_events'
+    ];
+BEGIN
+    FOREACH t IN ARRAY tables LOOP
+        EXECUTE format('ALTER TABLE public.%I ENABLE ROW LEVEL SECURITY;', t);
+        EXECUTE format('DROP POLICY IF EXISTS %I ON public.%I;', 'allow_all_' || t, t);
+        EXECUTE format('CREATE POLICY %I ON public.%I FOR ALL TO public USING (true) WITH CHECK (true);', 'allow_all_' || t, t);
+    END LOOP;
+END $$;
+
 -- Step 13: Seed Nigerian Enterprise Dataset
 INSERT INTO public.organizations (id, name, code, status, currency)
 VALUES ('org-enterprise-01', 'Apex Nigeria Limited', 'APEX-NG', 'active', 'NGN');
