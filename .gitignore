@@ -1,0 +1,20 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Temporary text files
+prd_extracted.txt
+headings.txt
+
+# Virtual environments
+venv/
+env/
+.venv/
+
+# Environment files with sensitive credentials
+.env.local
+
+# OS generated
+Thumbs.db
+Desktop.ini
